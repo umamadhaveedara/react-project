@@ -1,0 +1,380 @@
+container-dashbord {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  height: 100vh !important;
+}
+.content{
+  background-color: #cbe3ff;
+  height: 100vh;
+}
+.navbar {
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: space-between; 
+}
+.nav-main {
+  display: flex;
+  align-items: center;
+}
+.dropbtn {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* .dropbtn i {
+  margin: 0em 0.5em;
+} */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+.logo {
+  color: rgb(0, 0, 0);
+  font-size: large !important;
+  font-weight: 800 !important;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropbtn p {
+  margin: 0em;
+  padding: 0em 1em;
+}
+.content {
+  padding: 95px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* position: absolute; */
+}
+input[type="type"] {
+  height: 100%;
+  width: 50%;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 0em 1em;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.034);
+}
+h1 {
+  font-size: medium;
+  font-weight: 600;
+  text-align: center;
+  color: #021832;
+  text-transform: uppercase;
+  border-bottom: 2px solid #021832;
+  margin: 0px 20px;
+}
+.emptyDataPopUp {
+  display: none;
+}
+.search-main {
+  height: 100%;
+  width: 80%;
+}
+.addUserOption {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px;
+  /* border: 2px solid red; */
+}
+#addUserBtn {
+  padding: 0em 1em;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  background-color: #0c0765;
+  color: white;
+  cursor: pointer;
+}
+/* #updateUserMainBtn{
+  display: none;
+  margin-bottom: 1em;
+} */
+
+.deletePopUp {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 200px;
+  background-color: white;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.559);
+  padding: 1em;
+  display: none;
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  transform: translate(-50%);
+}
+.deletePopUpdata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.deletePopUp button {
+  padding: 0.6em 1.2em;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  margin: 0em 1em;
+  color: white;
+}
+.deleteyes {
+  background-color: rgb(26, 194, 26);
+}
+.deleteno {
+  background-color: rgb(223, 10, 10);
+}
+.deletePopUp i {
+  padding-right: 0.5em;
+}
+.dataBox {
+  margin-top: 1em;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* border: 2px solid red; */
+}
+.userBox {
+  margin: 10px 0px;
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 400px; */
+  flex: 0 1 400px;
+  margin: 0.5em 0.5em;
+  /* flex: 2 1 400px; */
+  flex-direction: column;
+  /* height: 40%; */
+  /* border: 2px solid black; */
+  align-items: center;
+  justify-content: space-around;
+  background-color: white;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0.5px 0.5px 10px 1px rgba(28, 28, 28, 0.167);
+}
+.fa-pen:hover {
+  color: rgb(0, 255, 0);
+  cursor: pointer;
+}
+.fa-trash:hover {
+  color: red;
+  cursor: pointer;
+}
+.userImg {
+  height: 100%;
+  /* border: 2px solid green; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.userIcons {
+  width: 100%;
+  /* border: 2px solid red; */
+  padding: 4px;
+  display: flex;
+  justify-content: flex-end;
+}
+.userIcons i {
+  padding: 0px 8px;
+}
+.userImg img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin: 0em 0.5em;
+  /* box-shadow: 0.5px 0.5px 10px 1px rgba(28, 28, 28, 0.167); */
+}
+.userdata {
+  height: 100%;
+  /* border: 2px solid rgb(166, 18, 42); */
+  display: flex;
+  flex-direction: column;
+}
+.userMainInfo {
+  /* border: 2px solid brown; */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  /* flex-wrap: wrap; */
+}
+.userdata p {
+  margin: 5px;
+  font-size: small;
+}
+.addUserPopUp {
+  width: 40%;
+  height: 90%;
+  overflow-y: scroll;
+  /* border: 2px solid red; */
+  background-color: white;
+  box-shadow: 0.5px 0.5px 20px 0px rgba(28, 28, 28, 0.301);
+  border-radius: 8px;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  z-index: 2;
+  top: 90px;
+  left: 50%;
+  transform: translate(-50%);
+  /* display: none; */
+}
+.addUserPopUp::-webkit-scrollbar {
+   display: none; 
+  scroll-behavior: smooth; 
+}
+
+.addUserPopUpForm {
+  display: flex;
+  flex-direction: column;
+}
+#image-preview-container {
+  /* border: 2px solid green; */
+  box-shadow: 0.5px 0.5px 10px 1px rgba(28, 28, 28, 0.167);
+  border-radius: 8px;
+  height: 200px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+.closeBtn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#PopUpCloseBtn {
+  margin-bottom: 1em;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#phonemgs,
+#emailmgs,
+#lastnamemgs,
+#firstnamemgs,
+#photomgs {
+  color: red;
+  display: flex;
+  font-size: small;
+  margin-left: 0.2em;
+}
+#image-preview-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#image-preview-container img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+.userIcons button {
+  outline: none;
+  border: none;
+  background-color: white;
+}
+input[type="text"] {
+  height: 3em;
+  outline: none;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  /* cursor: pointer; */
+  box-shadow: 0.5px 0.5px 10px 1px rgba(28, 28, 28, 0.167);
+  padding: 0px 1em;
+}
+input[type="file"]::file-selector-button {
+  background-color: #0c0765;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0.5px 0.5px 10px 1px rgba(28, 28, 28, 0.167);
+  padding: 0.8em 1.2em;
+}
+.btn-close{
+  padding: 0em 1em;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  outline: none;
+  background-color: #0c0765;
+  color: white;
+  cursor: pointer;
+  height: 3em;
+}
+
+@media screen and (max-width: 992px) {
+  .userMainInfo {
+    flex-direction: column;
+  }
+  .content{
+    height: 100%;
+  }
+  .userdata p {
+    margin: 8px;
+    font-size: small;
+    text-align: center;
+  }
+  .userImg img {
+    margin: 1em 0em;
+  }
+  .userdata {
+    justify-content: center;
+  }
+  .userIcons i {
+    padding: 0px 5px;
+  }
+  .addUserPopUp {
+    width: 70%;
+  }
+  /* .userBox{
+    flex: 1 1 400px;
+  } */
+}
