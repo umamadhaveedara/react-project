@@ -6,6 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const notify = () => toast(" 🦄 Sucessfully Changed");
 
 function ChangePassword() {
+  const validUserPassedData = JSON.parse(localStorage.getItem('data'));
+  const fetchUrl = `http://localhost:3500/api/v1/app/${validUserPassedData._id}`
+  const validPassword = validUserPassedData.password
   function gotodashbord() {
     window.open("dashbord", "_self");
   }
@@ -28,7 +31,15 @@ function ChangePassword() {
   var validcurrentPassword = "";
   var validnewPassword = "";
   var validconfirmPassword = "";
+  var validPasswordMatchWithLocal = "";
 
+function passwordhandler(){
+  if(currentPassword === validPassword){
+    validPasswordMatchWithLocal = true
+  }else{
+    validPasswordMatchWithLocal = false
+  }
+}
   function handelCurrentPasswordMgs() {
     if (currentPassword == "") {
       validcurrentPassword = false;
@@ -74,7 +85,38 @@ function ChangePassword() {
     handelCurrentPasswordMgs();
     handelNewPasswordMgs();
     handelConfirmPasswordMgs();
-    if(validcurrentPassword && validnewPassword && validconfirmPassword){
+    passwordhandler();
+    const postData ={
+      password:confirmPassword
+    }
+    if(validcurrentPassword && validnewPassword && validconfirmPassword && validPasswordMatchWithLocal){
+      const requestOptions = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      };
+
+      fetch(fetchUrl, requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          {
+            notify();
+            localStorage.setItem('data', JSON.stringify(postData));
+            console.log(validUserPassedData.email)
+          }
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error("POST request error:", error);
+        });
+
       setConfirmPassword("")
       setNewPassword("")
       setCurrentPassword("")
@@ -100,7 +142,7 @@ function ChangePassword() {
           <div class="dropdown">
             <button class="dropbtn">
               <i class="fa-solid fa-user"></i>
-              <p>Mr. Uma</p>
+              <p>{`${validUserPassedData.firstName} ${validUserPassedData.lastName}`}</p>
               <i class="fa fa-caret-down"></i>
             </button>
             <div class="dropdown-content">

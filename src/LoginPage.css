@@ -25,7 +25,7 @@ body{
   justify-content: center;
   align-items: center;
 }
-.container {
+.container-login {
   width: 70vw;
   height: 70vh;
   /* border: 2px solid red; */
@@ -188,9 +188,9 @@ input[type="password"] {
   .main-img {
     display: none;
   }
-  .container {
+  .container-login {
     width: 90vw;
-    height: 60vh;
+    height: auto;
   }
   .main-form {
     width: 100%;

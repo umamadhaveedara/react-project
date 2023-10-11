@@ -1,8 +1,8 @@
 import "./Signup.css";
 import React, { useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const fetchUrl = "http://localhost:3500/api/v1/app/post";
 export default function App() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -28,10 +28,9 @@ export default function App() {
       validfnamedata = true;
     }
   };
-  function handelLogin(){
-    window.open("login", "_self")
+  function handelLogin() {
+    window.open("login", "_self");
   }
-
 
   const checklname = () => {
     if (lname.trim() === "") {
@@ -46,7 +45,9 @@ export default function App() {
     if (mail.trim() === "") {
       setMailerror("");
       validmaildata = false;
-    } else if (!mail.match(/(\<|^)[\w\d._%+-]+@(?:[\w\d-]+\.)+(\w{2,})(\>|$)/i)) {
+    } else if (
+      !mail.match(/(\<|^)[\w\d._%+-]+@(?:[\w\d-]+\.)+(\w{2,})(\>|$)/i)
+    ) {
       setMailerror("Please Enter a Valid Email ");
       validmaildata = false;
     } else {
@@ -76,12 +77,46 @@ export default function App() {
     checkpass();
     if (validmaildata && validfnamedata && validlnamedata && validpassdata) {
       event.preventDefault();
+
+
+      const postData = {
+        firstName: fname,
+        lastName: lname,
+        email: mail,
+        password: pass,
+      };
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      };
+
+      fetch(fetchUrl, requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          {
+            notify();
+          }
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error("POST request error:", error);
+        });
+
       console.log("done!");
       setFname("");
       setLname("");
       setMail("");
       setPass("");
-      {notify()}
+      
       // window.location.reload()
       // window.open('password.html');
       // location.reload();
@@ -189,7 +224,10 @@ export default function App() {
           </button>
         </form>
         <h3 id="login" style={{ textalign: "center" }}>
-          Already have an account? <a href="#" onClick={handelLogin}>Login</a>
+          Already have an account?{" "}
+          <a href="#" onClick={handelLogin}>
+            Login
+          </a>
         </h3>
       </div>
     </div>

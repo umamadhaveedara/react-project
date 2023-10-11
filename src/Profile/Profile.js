@@ -6,21 +6,22 @@ function Profile() {
 
   const notify = () => toast(" 🦄 Sucessfully Updated");
 
+  const validUserPassedData = JSON.parse(localStorage.getItem('data'));
 
   var firstNameValid = "" 
   var lastNameValid = "" 
   var emailValid = "" 
-  var passwordValid = "" 
+  // var passwordValid = "" 
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState(validUserPassedData.firstName);
+  const [lastname, setLastname] = useState(validUserPassedData.lastName);
+  const [email, setEmail] = useState(validUserPassedData.email);
+  // const [password, setPassword] = useState("");
 
   const [firstnamemgs, setfirstnamemgs] = useState("");
   const [lastnamemgs, setlastnamemgs] = useState("");
   const [emailmgs, setemailmgs] = useState("");
-  const [passwordmgs, setpasswordmgs] = useState("");
+  // const [passwordmgs, setpasswordmgs] = useState("");
 
 
   // console.log(firstname)
@@ -59,73 +60,117 @@ function Profile() {
       emailValid = true
     }
   }
-  function handelpassword(){
-    if(password === ""){
-      setpasswordmgs("This field is required")
-      passwordValid = false
-    }else if(!password.match(/^[a-zA-Z0-9!@#$%^&*]{6,16}$/)){
-      setpasswordmgs("Please Enter a Valid password ")
-      passwordValid = false
-    }
-    else if (password !== ""){
-      setpasswordmgs("")
-      passwordValid = true
-    }
-  }
+  // function handelpassword(){
+  //   if(password === ""){
+  //     setpasswordmgs("This field is required")
+  //     passwordValid = false
+  //   }else if(!password.match(/^[a-zA-Z0-9!@#$%^&*]{6,16}$/)){
+  //     setpasswordmgs("Please Enter a Valid password ")
+  //     passwordValid = false
+  //   }
+  //   else if (password !== ""){
+  //     setpasswordmgs("")
+  //     passwordValid = true
+  //   }
+  // }
+
+  let fetchUrl = `http://localhost:3500/api/v1/app/${validUserPassedData._id}`
+  const id = validUserPassedData._id
+  const password = validUserPassedData.password
+  const postData = {
+    _id: id,
+    firstName: firstname,
+    lastName: lastname,
+    email: email,
+    password: password
+  };
 
   function validSubmit(event){
     event.preventDefault();
     handelfirstname();
     handellastname();
-    handelpassword();
     handelemail();
     
-    if(emailValid && passwordValid && firstNameValid && lastNameValid){
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setPassword("");
-      {notify()}
+    if(emailValid && firstNameValid && lastNameValid){
+      const requestOptions = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      };
+
+      fetch(fetchUrl, requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          {
+            notify();
+            localStorage.setItem('data', JSON.stringify(postData));
+            console.log(validUserPassedData.email)
+          }
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error("POST request error:", error);
+        });
+
+      // setFirstname("");
+      // setLastname("");
+      // setEmail("");
+      // setPassword("");
     }else if(emailValid){
       setfirstnamemgs("This field is required");
       setlastnamemgs("This field is required");
-      setpasswordmgs("This field is required");
-    }else if(passwordValid){
-      setfirstnamemgs("This field is required");
-      setlastnamemgs("This field is required");
-      setemailmgs("This field is required");
+      // setpasswordmgs("This field is required");
     }else if(firstNameValid){
       setlastnamemgs("This field is required");
       setemailmgs("This field is required");
-      setpasswordmgs("This field is required");
+      // setpasswordmgs("This field is required");
     }else if(lastNameValid){
       setfirstnamemgs("This field is required");
       setemailmgs("This field is required");
-      setpasswordmgs("This field is required");
+      // setpasswordmgs("This field is required");
     }
 
   }
 
+  function changepassword1() {
+    window.open("change-password", "_self");
+  }
+  function profile1() {
+    window.open("profile", "_self");
+  }
+  function logout() {
+    window.open("/", "_self");
+  }
+  function gotodashbord() {
+    window.open("profile", "_self");
+  }
   return (
     <div>
       <nav className="navbar">
         <h3 className="logo">LOGO</h3>
         <div className="nav-main">
-          <h1 onclick="gotodashbord()">Home</h1>
+          <h1 onClick={gotodashbord}>Home</h1>
           <div className="dropdown">
             <button className="dropbtn">
               <i className="fa-solid fa-user"></i>
-              <p>Mr. Uma</p>
+              <p>{`${validUserPassedData.firstName} ${validUserPassedData.lastName}`}</p>
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
-              <a href="#" onclick="profile()">
+              <a href="#" onClick={profile1}>
                 Profile
               </a>
-              <a href="#" onclick="changepassword1()">
+              <a href="#" onClick={changepassword1}>
                 Change Password
               </a>
-              <a href="#" onclick="logout1()">
+              <a href="#" onClick={logout}>
                 Logout
               </a>
             </div>
@@ -175,7 +220,7 @@ function Profile() {
             />
             <p id="emailmgs">{emailmgs}</p>
 
-            <input
+            {/* <input
               type="password"
               name="password"
               id="password"
@@ -186,7 +231,7 @@ function Profile() {
                 handelpassword();
               }}
             />
-            <p id="passwordmgs">{passwordmgs}</p>
+            <p id="passwordmgs">{passwordmgs}</p> */}
             <br />
             <button type="submit" className="btn" onClick={validSubmit}>
               Update

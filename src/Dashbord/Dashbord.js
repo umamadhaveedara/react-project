@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import "./Dashbord.css";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useLocation } from "react-router-dom";
 // import profile from "../Profile/Profile";
 var cardURL = "";
 var users = [];
@@ -28,7 +29,9 @@ const [showPopup, setShowPopup] = useState(false);
 const [editMode, setEditMode] = useState(false);
 const [selectedUserIndex, setSelectedUserIndex] = useState(null);
 const [searchQuery, setSearchQuery] = useState('');
- 
+const validUserPassedData = JSON.parse(localStorage.getItem('data'));
+
+
 
   var firstNameValid = "";
   var lastNameValid = "";
@@ -46,6 +49,8 @@ const [searchQuery, setSearchQuery] = useState('');
   const [emailmgs, setemailmgs] = useState("");
   const [phonemgs, setphonemgs] = useState("");
   const [photomgs, setphotomgs] = useState("");
+
+
   
  let validateUserAdd = (event) => {
     event.preventDefault();
@@ -169,7 +174,7 @@ const handleImageUpload = (event) => {
           <div className="dropdown">
             <button className="dropbtn">
               <i className="fa-solid fa-user"></i>
-              <p>Mr. Uma</p>
+              <p>{`${validUserPassedData.firstName} ${validUserPassedData.lastName}` }</p>
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
