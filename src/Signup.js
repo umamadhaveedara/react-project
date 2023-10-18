@@ -1,8 +1,10 @@
 import "./Signup.css";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 import "react-toastify/dist/ReactToastify.css";
-const fetchUrl = "http://localhost:3500/api/v1/app/post";
+const fetchUrl = "http://localhost:3500/api/v1/app/user";
 export default function App() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -18,6 +20,7 @@ export default function App() {
   var validpassdata;
 
   const notify = () => toast(" 🦄 Sucessfully Registered");
+  const navigate = useNavigate();
 
   const checkfname = () => {
     if (fname.trim() === "") {
@@ -29,7 +32,9 @@ export default function App() {
     }
   };
   function handelLogin() {
-    window.open("login", "_self");
+    // window.open("login", "_self");
+    navigate("/")
+
   }
 
   const checklname = () => {

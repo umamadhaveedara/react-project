@@ -3,15 +3,17 @@ import React, { useEffect, useState } from "react";
 import "./LoginPage.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function App() {
-  const fetchUrl = "http://localhost:3500/api/v1/app/get";
+  const fetchUrl = "http://localhost:3500/api/v1/app/user";
   const notify = () => toast("Email or password worng");
   const requestOptions = {
     method: "GET",
   };
 
+  const navigate = useNavigate();
   const [mainData, setMainData] = useState([]);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function App() {
       .catch((error) => {
         console.error("GET request error:", error);
       });
-  },[]);
+  }, []);
 
   const [mail, setMail] = useState("");
   const [pass, setPass] = useState("");
@@ -63,21 +65,16 @@ export default function App() {
       validpassdata = true;
     }
   };
-  function handelForgot() {
-    window.open("forgot", "_self");
-  }
-  function handelSignup() {
-    window.open("signup", "_self");
-  }
+ 
 
   function datacheck() {
     // console.log(mainData);
     mainData.some((eachuser) => {
-      if(eachuser.email === mail && eachuser.password === pass){
-        matchFound = true
+      if (eachuser.email === mail && eachuser.password === pass) {
+        matchFound = true;
         validUserDataPassing = eachuser;
       }
-  });
+    });
   }
 
   function Validation(event) {
@@ -86,8 +83,8 @@ export default function App() {
     checkpass();
     datacheck();
     if (validmaildata && validpassdata && matchFound) {
-      localStorage.setItem('data', JSON.stringify(validUserDataPassing));
-      window.open("dashbord", "_self");
+      localStorage.setItem("data", JSON.stringify(validUserDataPassing));
+      navigate("/dashbord")
     } else if (validmaildata && validpassdata && !matchFound) {
       {
         notify();
@@ -142,9 +139,7 @@ export default function App() {
                 <h3 className="keepmedata">Keep me logged in</h3>
               </div>
               <div className="forgot">
-                <a id="forgot" href="#" onClick={handelForgot}>
-                  Forgot password
-                </a>
+              <Link to="/forgot">Forgot Password</Link>
               </div>
             </div>
             <button id="submit-btn" type="submit">
@@ -152,10 +147,7 @@ export default function App() {
             </button>
           </form>
           <h3 className="noaccount">
-            Don't have an account?{" "}
-            <a href="#" id="noaccount" onClick={handelSignup}>
-              Sign up
-            </a>
+            Don't have an account? <Link to="/signup">Signup</Link>
           </h3>
         </div>
         <div className="main-img">

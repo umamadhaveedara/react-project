@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+
 
 function Profile() {
+  const navigate = useNavigate();
 
   const notify = () => toast(" 🦄 Sucessfully Updated");
 
@@ -74,7 +77,7 @@ function Profile() {
   //   }
   // }
 
-  let fetchUrl = `http://localhost:3500/api/v1/app/${validUserPassedData._id}`
+  let fetchUrl = `http://localhost:3500/api/v1/app/user/${validUserPassedData._id}`
   const id = validUserPassedData._id
   const password = validUserPassedData.password
   const postData = {
@@ -90,7 +93,7 @@ function Profile() {
     handelfirstname();
     handellastname();
     handelemail();
-    
+
     if(emailValid && firstNameValid && lastNameValid){
       const requestOptions = {
         method: "PUT",
@@ -140,16 +143,20 @@ function Profile() {
   }
 
   function changepassword1() {
-    window.open("change-password", "_self");
+    navigate("/change-password")
+
   }
   function profile1() {
-    window.open("profile", "_self");
+    navigate("/profile")
+
   }
   function logout() {
-    window.open("/", "_self");
+    navigate("/")
+
   }
   function gotodashbord() {
-    window.open("profile", "_self");
+    navigate("/dashbord")
+
   }
   return (
     <div>

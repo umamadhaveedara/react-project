@@ -2,24 +2,32 @@ import React, { useState } from "react";
 import "./ChangePassword.css";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+
 
 const notify = () => toast(" 🦄 Sucessfully Changed");
 
+
 function ChangePassword() {
+const navigate = useNavigate();
   const validUserPassedData = JSON.parse(localStorage.getItem('data'));
   const fetchUrl = `http://localhost:3500/api/v1/app/${validUserPassedData._id}`
   const validPassword = validUserPassedData.password
   function gotodashbord() {
-    window.open("dashbord", "_self");
+    // window.open("dashbord", "_self");
+    navigate("/dashbord")
+
   }
   function gotoprofile() {
-    window.open("profile", "_self");
+    navigate("/profile")
+
   }
   function gologout() {
-    window.open("/", "_self");
+    navigate("/")
   }
   function gochangepassword() {
-    window.open("change-password", "_self");
+    navigate("/chnage-password")
+
   }
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -69,15 +77,12 @@ function passwordhandler(){
     }
   }
   function handelConfirmPasswordMgs() {
-    if (confirmPassword == "") {
-      validconfirmPassword = false;
-      setConfirmPasswordMgs("This field is required");
-    } else if (confirmPassword !== newPassword) {
-      validconfirmPassword = false;
-      setConfirmPasswordMgs("Confirm password did't match");
-    } else if (confirmPassword === newPassword) {
-      validconfirmPassword = true;
+    if (newPassword ===  confirmPassword) {
       setConfirmPasswordMgs("");
+      validconfirmPassword = true;
+    }  else{
+      setConfirmPasswordMgs("This field is required");
+      validconfirmPassword = false;
     }
   }
   function validSubmit(e){
@@ -87,7 +92,11 @@ function passwordhandler(){
     handelConfirmPasswordMgs();
     passwordhandler();
     const postData ={
-      password:confirmPassword
+      password:confirmPassword,
+      email:validUserPassedData.email,
+      firstName:validUserPassedData.firstName,
+      lastName:validUserPassedData.lastName,
+      _id:validUserPassedData._id
     }
     if(validcurrentPassword && validnewPassword && validconfirmPassword && validPasswordMatchWithLocal){
       const requestOptions = {
@@ -120,7 +129,6 @@ function passwordhandler(){
       setConfirmPassword("")
       setNewPassword("")
       setCurrentPassword("")
-      {notify()}
     }else if (validcurrentPassword){
       setnewPasswordMgs("This field is required");
       setConfirmPasswordMgs("This field is required");
@@ -169,10 +177,10 @@ function passwordhandler(){
               id="currentpassword"
               placeholder="Current Password"
               value={currentPassword}
-              onChange={(e) => {
-                setCurrentPassword(e.target.value);
-                handelCurrentPasswordMgs();
-              }}
+              onChange={(e)=>setCurrentPassword(e.target.value)}
+              onInput={
+                handelCurrentPasswordMgs
+              }
             />
             <p id="currentpasswordmgs">{CurrentPasswordMgs}</p>
             <input
@@ -181,10 +189,10 @@ function passwordhandler(){
               id="newpassword"
               placeholder="New Password"
               value={newPassword}
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-                handelNewPasswordMgs();
-              }}
+              onChange={(e)=>setNewPassword(e.target.value)}
+              onInput={
+                handelNewPasswordMgs
+              }
             />
             <p id="newpasswordmgs">{newPasswordMgs}</p>
             <input
@@ -193,10 +201,10 @@ function passwordhandler(){
               id="confirmpassword"
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                handelConfirmPasswordMgs();
-              }}
+              onChange={(e)=>setConfirmPassword(e.target.value)}
+              onInput={
+                handelConfirmPasswordMgs
+              }
             />
             <p id="confirmpasswordmgs">{confirmPasswordMgs}</p>
             <button type="submit" id="btn" onClick={validSubmit}>
