@@ -113,6 +113,7 @@ function Profile() {
         .then((data) => {
           {
             notify();
+            navigate("/profile");
             localStorage.setItem('data', JSON.stringify(postData));
             console.log(validUserPassedData.email)
           }

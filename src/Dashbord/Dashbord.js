@@ -3,17 +3,21 @@ import "./Dashbord.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import { useLocation } from "react-router-dom";
 // import profile from "../Profile/Profile";
 var cardURL = "";
 var users = [];
+
 const notify = () => toast(" 🦄 Sucessfully User Added");
 const notifyEdit = () => toast(" 🦄 Sucessfully User Updated");
 const notifyDelete = () => toast(" 🦄 User deleted");
 const fetchUrl = "http://localhost:3500/api/v1/app/Dashboard";
 function Dashbord() {
   const navigate = useNavigate();
+  const deletePopUp = useRef();
+  const [users, setUsers] = useState([]);
 
   function HandelProfile() {
     // window.open("profile", "_self");
@@ -36,27 +40,34 @@ function Dashbord() {
     image: "",
   });
 
-  const requestOptionsGET = {
-    method: "GET",
-  };
+  // const requestOptionsGET = {
+  //   method: "GET",
+  // };
 
   useEffect(() => {
-    fetch(fetchUrl, requestOptionsGET)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch((error) => {
-        console.error("GET request error:", error);
-      });
-  }, []);
+    
+    // fetch(fetchUrl, requestOptionsGET)
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     setUsers(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("GET request error:", error);
+    //   });
 
-  const [users, setUsers] = useState([]);
+    axios
+      .get(fetchUrl)
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => [console.log("Get request error", error)]);
+  }, [users.length]);
+
   const [showPopup, setShowPopup] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedUserIndex, setSelectedUserIndex] = useState(null);
@@ -102,69 +113,108 @@ function Dashbord() {
       const updatedUsers = [...users];
       updatedUsers[selectedUserIndex] = { ...formData };
       setUsers(updatedUsers);
-      {
-        notifyEdit();
-      }
-      const requestOptionsPUT = {
-        method: "PUT",
+      // {
+      //   notifyEdit();
+      // }
+      // const requestOptionsPUT = {
+      //   method: "PUT",
 
-        headers: {
-          "Content-Type": "application/json",
-        },
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
 
-        body: JSON.stringify(updatedUsers[selectedUserIndex]),
-      };
+      //   body: JSON.stringify(updatedUsers[selectedUserIndex]),
+      // };
 
-      fetch(
-        `http://localhost:3500/api/v1/app/Dashboard/${_id}`,
-        requestOptionsPUT
-      )
+      // fetch(
+      //   `http://localhost:3500/api/v1/app/Dashboard/${_id}`,
+      //   requestOptionsPUT
+      // )
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error("Network response was not ok");
+      //     }
+
+      //     return response.json();
+      //   })
+
+      //   .then((data) => {
+      //     {
+      //       console.log("done!");
+      //     }
+
+      //     console.log(data);
+      //   })
+
+      //   .catch((error) => {
+      //     console.error("POST request error:", error);
+      //   });
+
+      axios
+        .put(
+          `http://localhost:3500/api/v1/app/Dashboard/${_id}`,
+          updatedUsers[selectedUserIndex]
+        )
+
         .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          return response.json();
-        })
-
-        .then((data) => {
+          console.log("done!");
           {
-            console.log("done!");
+            notifyEdit();
           }
-
-          console.log(data);
+          console.log(response.data);
         })
 
         .catch((error) => {
-          console.error("POST request error:", error);
+          console.error("PUT request error:", error);
         });
     } else {
       // Add new user
       setUsers([...users, { ...formData }]);
 
-      const requestOptionsPOST = {
-        method: "POST",
+      // const requestOptionsPOST = {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // };
+
+      // console.log(JSON.stringify(formData));
+
+      // fetch(fetchUrl, requestOptionsPOST)
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error("Network response was not ok");
+      //     }
+      //     return response.json();
+      //   })
+      //   .then((data) => {
+      //     {
+      //       notify();
+      //     }
+      //     console.log(data);
+      //   })
+      //   .catch((error) => {
+      //     console.error("POST request error:", error);
+      //   });
+
+      const postDataToServer = {
+        method: "post",
+        url: fetchUrl,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        data: formData,
       };
 
-      console.log(JSON.stringify(formData));
-
-      fetch(fetchUrl, requestOptionsPOST)
+      axios(postDataToServer)
         .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
           {
             notify();
           }
-          console.log(data);
+          console.log(response.data);
         })
+
         .catch((error) => {
           console.error("POST request error:", error);
         });
@@ -266,27 +316,39 @@ function Dashbord() {
   //     notifyDelete();
   //   }
   // };
-
-  const deleteUser = async (_id) => {
+  // var deleteid;
+  const deleteUser = (_id) => {
+    deletePopUp.current.style.display = "block";
     // const updatedUsers = [...users];
 
     // updatedUsers.splice(index, 1);
 
-    console.log(_id);
+    // console.log(_id);
+    //  deleteid = _id
+    //  deleteyes(_id)
+    localStorage.setItem("deleteid", JSON.stringify(_id));
+  };
 
+  const deleteno = () => {
+    deletePopUp.current.style.display = "none";
+  };
+
+  const deleteyes = async () => {
+    var deleteLocalId = JSON.parse(localStorage.getItem("deleteid"));
+    console.log(deleteLocalId);
     try {
-      await fetch(`http://localhost:3500/api/v1/app/Dashboard/${_id}`, {
-        method: "DELETE",
-      });
+      await axios.delete(
+        `http://localhost:3500/api/v1/app/Dashboard/${deleteLocalId}`
+      );
 
       // Remove the deleted item from the local state
-
+      deletePopUp.current.style.display = "none";
+      localStorage.removeItem("deleteid");
       setUsers(users.filter((item) => item._id !== _id));
     } catch (error) {
       console.error("Error deleting data:", error);
     }
   };
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
@@ -426,14 +488,14 @@ function Dashbord() {
             </form>
           </div>
         )}
-        <div className="deletePopUp" id="deletePopUp">
+        <div className="deletePopUp" id="deletePopUp" ref={deletePopUp}>
           <div className="deletePopUpdata">
             <h3>Are you sure want to delete?</h3>
             <div>
-              <button className="deleteyes" onClick="deleteyes(event)">
+              <button className="deleteyes" onClick={deleteyes}>
                 <i className="fa-solid fa-thumbs-up"></i>Yes
               </button>
-              <button className="deleteno" onClick="deleteno(event)">
+              <button className="deleteno" onClick={deleteno}>
                 <i className="fa-solid fa-thumbs-down"></i>No
               </button>
             </div>
