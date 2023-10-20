@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { useLocation } from "react-router-dom";
+import Card from "./Card";
 // import profile from "../Profile/Profile";
 var cardURL = "";
 var users = [];
@@ -305,6 +306,7 @@ function Dashbord() {
           </div>
         </div>
       </>
+      // <Card userProp = {user} userIndex = {index} />
     ));
   };
 
@@ -344,7 +346,7 @@ function Dashbord() {
       // Remove the deleted item from the local state
       deletePopUp.current.style.display = "none";
       localStorage.removeItem("deleteid");
-      setUsers(users.filter((item) => item._id !== _id));
+      setUsers(users.filter((item) => item._id !== deleteLocalId));
     } catch (error) {
       console.error("Error deleting data:", error);
     }

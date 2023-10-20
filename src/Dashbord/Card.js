@@ -1,28 +1,33 @@
 import React from 'react'
 
-function Card() {
+function Card({userProp, userIndex}) {
+    console.log(userProp)
+    const {_id,phoneNumber,lastName,image,firstName,email}  = userProp
+    // console.log(props)
+    // console.log(userIndex)
+
   return (
-    <>
+      <>
         <div className="userBox">
           <div class="userIcons">
-            <button onClick={() => editUser(index, user._id)}>
+            <button onClick={() => editUser(userIndex, _id)}>
               <i class="fa-solid fa-pen"></i>
             </button>
-            <button onClick={() => deleteUser(user._id)}>
+            <button onClick={() => deleteUser(_id)}>
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
           <div class="userMainInfo">
             <div class="userImg">
-              <img src={user.image} alt="Profile" srcset="" />
+              <img src={image} alt="Profile" srcset="" />
             </div>
             <div class="userdata">
               <p>
-                Name: {user.firstName}
-                {user.lastName}
+                Name: {firstName}
+                {lastName}
               </p>
-              <p>Email: {user.email}</p>
-              <p>Mobile No: {user.phoneNumber}</p>
+              <p>Email: {email}</p>
+              <p>Mobile No: {phoneNumber}</p>
             </div>
           </div>
         </div>
