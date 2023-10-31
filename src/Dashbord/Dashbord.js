@@ -7,7 +7,6 @@ import axios from "axios";
 
 import { useLocation } from "react-router-dom";
 import Card from "./Card";
-// import profile from "../Profile/Profile";
 var cardURL = "";
 var users = [];
 
@@ -19,6 +18,7 @@ function Dashbord() {
   const navigate = useNavigate();
   const deletePopUp = useRef();
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   function HandelProfile() {
     // window.open("profile", "_self");
@@ -46,21 +46,6 @@ function Dashbord() {
   // };
 
   useEffect(() => {
-    
-    // fetch(fetchUrl, requestOptionsGET)
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setUsers(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("GET request error:", error);
-    //   });
-
     axios
       .get(fetchUrl)
       .then((response) => {
@@ -107,7 +92,7 @@ function Dashbord() {
     console.log(users);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (editMode) {
       // Update user data
@@ -151,7 +136,7 @@ function Dashbord() {
       //     console.error("POST request error:", error);
       //   });
 
-      axios
+      await axios
         .put(
           `http://localhost:3500/api/v1/app/Dashboard/${_id}`,
           updatedUsers[selectedUserIndex]
@@ -207,8 +192,7 @@ function Dashbord() {
         },
         data: formData,
       };
-
-      axios(postDataToServer)
+      await axios(postDataToServer)
         .then((response) => {
           {
             notify();
@@ -220,7 +204,6 @@ function Dashbord() {
           console.error("POST request error:", error);
         });
     }
-    clearForm();
   };
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
