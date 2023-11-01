@@ -3,34 +3,34 @@ import "./Dashbord.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-import { useLocation } from "react-router-dom";
-import Card from "./Card";
-var cardURL = "";
-var users = [];
+import {
+  getUser,
+  deleteUserMain,
+  PutUserMain,
+  PostUserMain,
+} from "../Axiosinterceptor";
 
 const notify = () => toast(" 🦄 Sucessfully User Added");
 const notifyEdit = () => toast(" 🦄 Sucessfully User Updated");
 const notifyDelete = () => toast(" 🦄 User deleted");
-const fetchUrl = "http://localhost:3500/api/v1/app/Dashboard";
 function Dashbord() {
   const navigate = useNavigate();
   const deletePopUp = useRef();
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [sortOrderName, setSortOrderName] = useState("asc");
+  const [sortOrderMobile, setSortOrderMobile] = useState("asc");
+  const [filtervalue, setfilterValue] = useState("firstName");
+
+  // const [loading, setLoading] = useState(true);
 
   function HandelProfile() {
-    // window.open("profile", "_self");
     navigate("/profile");
   }
   function HandelChangePassword() {
-    // window.open("change-password", "_self");
     navigate("/change-password");
   }
   function handelLogout() {
     localStorage.clear();
-    // window.open("/", "_self");
     navigate("/");
   }
   const [formData, setFormData] = useState({
@@ -41,13 +41,9 @@ function Dashbord() {
     image: "",
   });
 
-  // const requestOptionsGET = {
-  //   method: "GET",
-  // };
 
   useEffect(() => {
-    axios
-      .get(fetchUrl)
+    getUser()
       .then((response) => {
         setUsers(response.data);
       })
@@ -78,19 +74,19 @@ function Dashbord() {
   const [phonemgs, setphonemgs] = useState("");
   const [photomgs, setphotomgs] = useState("");
 
-  let validateUserAdd = (event) => {
-    event.preventDefault();
-    const user = {
-      firstname: { firstname },
-      lastname: { lastname },
-      email: { email },
-      phone: { phone },
-      image: { photo },
-    };
-    users.push(user);
-    // displayUser();
-    console.log(users);
-  };
+  // let validateUserAdd = (event) => {
+  //   event.preventDefault();
+  //   const user = {
+  //     firstname: { firstname },
+  //     lastname: { lastname },
+  //     email: { email },
+  //     phone: { phone },
+  //     image: { photo },
+  //   };
+  //   users.push(user);
+  //   // displayUser();
+  //   console.log(users);
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -136,16 +132,18 @@ function Dashbord() {
       //     console.error("POST request error:", error);
       //   });
 
-      await axios
-        .put(
-          `http://localhost:3500/api/v1/app/Dashboard/${_id}`,
-          updatedUsers[selectedUserIndex]
-        )
-
+      // await axios
+      //   .put(
+      //     `http://localhost:3500/api/v1/app/Dashboard/${_id}`,
+      //     updatedUsers[selectedUserIndex]
+      //   )
+      await PutUserMain(_id, updatedUsers[selectedUserIndex])
         .then((response) => {
           console.log("done!");
           {
             notifyEdit();
+            // setShowPopup(false)
+            clearForm();
           }
           console.log(response.data);
         })
@@ -184,18 +182,21 @@ function Dashbord() {
       //     console.error("POST request error:", error);
       //   });
 
-      const postDataToServer = {
-        method: "post",
-        url: fetchUrl,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: formData,
-      };
-      await axios(postDataToServer)
+      // const postDataToServer = {
+      //   method: "post",
+      //   url: fetchUrl,
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   data: formData,
+      // };
+      const data = formData;
+      await PostUserMain(data)
         .then((response) => {
           {
             notify();
+            // setShowPopup(false)
+            clearForm();
           }
           console.log(response.data);
         })
@@ -204,6 +205,28 @@ function Dashbord() {
           console.error("POST request error:", error);
         });
     }
+  };
+  const changeFilter = (event) => {
+    setfilterValue(event.target.value);
+    sortData(event.target.value);
+  };
+  const sortData = (key) => {
+    const sortedData = [...users].sort((a, b) => {
+      if (key === "firstName") {
+        return sortOrderName === "asc"
+          ? a.firstName.localeCompare(b.firstName)
+          : b.firstName.localeCompare(a.firstName);
+      } else if (key === "email") {
+        return sortOrderMobile === "asc"
+          ? a.email.localeCompare(b.email)
+          : b.email.localeCompare(a.email);
+      } else if (key === "phoneNumber") {
+        return sortOrderMobile === "asc"
+          ? a.phoneNumber - b.phoneNumber
+          : b.phoneNumber - a.phoneNumber;
+      }
+    });
+    setUsers(sortedData);
   };
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -319,17 +342,19 @@ function Dashbord() {
   };
 
   const deleteyes = async () => {
-    var deleteLocalId = JSON.parse(localStorage.getItem("deleteid"));
     console.log(deleteLocalId);
     try {
-      await axios.delete(
-        `http://localhost:3500/api/v1/app/Dashboard/${deleteLocalId}`
-      );
-
+      var deleteLocalId = JSON.parse(localStorage.getItem("deleteid"));
+      await deleteUserMain(deleteLocalId);
+      console.log(deleteLocalId);
+      // await axios.delete(
+      //   `http://localhost:3500/api/v1/app/Dashboard/${deleteLocalId}`
+      // );
       // Remove the deleted item from the local state
       deletePopUp.current.style.display = "none";
       localStorage.removeItem("deleteid");
       setUsers(users.filter((item) => item._id !== deleteLocalId));
+      notifyDelete();
     } catch (error) {
       console.error("Error deleting data:", error);
     }
@@ -347,6 +372,9 @@ function Dashbord() {
     const selectedUser = users[index];
     setFormData({ ...selectedUser });
   };
+
+
+  
   return (
     <div className="container-dashbord">
       <nav className="navbar">
@@ -384,6 +412,19 @@ function Dashbord() {
               onChange={handleSearch}
             />
           </div>
+          <div className="filterBy">
+          <label htmlFor="filter">Filter by:</label>
+          <select
+            name="filter"
+            id="filter"
+            onChange={changeFilter}
+            value={filtervalue}
+          >
+            <option value="firstName">Name</option>
+            <option value="email">Email</option>
+            <option value="phoneNumber">Number</option>
+          </select>
+        </div>
           <button id="addUserBtn" onClick={() => setShowPopup(true)}>
             Add User
           </button>
