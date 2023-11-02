@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
 
 function Profile() {
   const navigate = useNavigate();
 
   const notify = () => toast(" 🦄 Sucessfully Updated");
 
-  const validUserPassedData = JSON.parse(localStorage.getItem('data'));
+  const validUserPassedData = JSON.parse(localStorage.getItem("data"));
+  const token = JSON.parse(localStorage.getItem("storeTokenInLocal"));
 
-  var firstNameValid = "" 
-  var lastNameValid = "" 
-  var emailValid = "" 
-  // var passwordValid = "" 
+  var firstNameValid = "";
+  var lastNameValid = "";
+  var emailValid = "";
+  // var passwordValid = ""
 
   const [firstname, setFirstname] = useState(validUserPassedData.firstName);
   const [lastname, setLastname] = useState(validUserPassedData.lastName);
@@ -26,41 +26,41 @@ function Profile() {
   const [emailmgs, setemailmgs] = useState("");
   // const [passwordmgs, setpasswordmgs] = useState("");
 
-
   // console.log(firstname)
   // console.log(lastname)
   // console.log(email)
   // console.log(password)
 
-  function handelfirstname(){
-    if(firstname === ""){
-      setfirstnamemgs("This field is required")
-      firstNameValid = false
-    }else{
-      setfirstnamemgs("")
-      firstNameValid = true
+  function handelfirstname() {
+    if (firstname === "") {
+      setfirstnamemgs("This field is required");
+      firstNameValid = false;
+    } else {
+      setfirstnamemgs("");
+      firstNameValid = true;
     }
   }
-  function handellastname(){
-    if(lastname === ""){
-      setlastnamemgs("This field is required")
-      lastNameValid = false
-    }else{
-      setlastnamemgs("")
-      lastNameValid = true
+  function handellastname() {
+    if (lastname === "") {
+      setlastnamemgs("This field is required");
+      lastNameValid = false;
+    } else {
+      setlastnamemgs("");
+      lastNameValid = true;
     }
   }
-  function handelemail(){
-    if(email === ""){
-      setemailmgs("This field is required")
-      emailValid = false
-    }else if(!email.match(/(\<|^)[\w\d._%+-]+@(?:[\w\d-]+\.)+(\w{2,})(\>|$)/i)){
-      setemailmgs("Please Enter a Valid Email ")
-      emailValid = false
-    }
-    else if(email !== ""){
-      setemailmgs("")
-      emailValid = true
+  function handelemail() {
+    if (email === "") {
+      setemailmgs("This field is required");
+      emailValid = false;
+    } else if (
+      !email.match(/(\<|^)[\w\d._%+-]+@(?:[\w\d-]+\.)+(\w{2,})(\>|$)/i)
+    ) {
+      setemailmgs("Please Enter a Valid Email ");
+      emailValid = false;
+    } else if (email !== "") {
+      setemailmgs("");
+      emailValid = true;
     }
   }
   // function handelpassword(){
@@ -77,28 +77,29 @@ function Profile() {
   //   }
   // }
 
-  let fetchUrl = `http://localhost:3500/api/v1/app/user/${validUserPassedData._id}`
-  const id = validUserPassedData._id
-  const password = validUserPassedData.password
+  let fetchUrl = `http://localhost:3500/api/v1/app/user/${validUserPassedData._id}`;
+  const id = validUserPassedData._id;
+  const password = validUserPassedData.password;
   const postData = {
     _id: id,
     firstName: firstname,
     lastName: lastname,
     email: email,
-    password: password
+    password: password,
   };
 
-  function validSubmit(event){
+  function validSubmit(event) {
     event.preventDefault();
     handelfirstname();
     handellastname();
     handelemail();
 
-    if(emailValid && firstNameValid && lastNameValid){
+    if (emailValid && firstNameValid && lastNameValid) {
       const requestOptions = {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(postData),
       };
@@ -114,10 +115,10 @@ function Profile() {
           {
             notify();
             navigate("/profile");
-            localStorage.setItem('data', JSON.stringify(postData));
-            console.log(validUserPassedData.email)
+            localStorage.setItem("data", JSON.stringify(postData));
+            console.log(validUserPassedData.email);
           }
-          console.log(data)
+          console.log(data);
         })
         .catch((error) => {
           console.error("POST request error:", error);
@@ -127,37 +128,32 @@ function Profile() {
       // setLastname("");
       // setEmail("");
       // setPassword("");
-    }else if(emailValid){
+    } else if (emailValid) {
       setfirstnamemgs("This field is required");
       setlastnamemgs("This field is required");
       // setpasswordmgs("This field is required");
-    }else if(firstNameValid){
+    } else if (firstNameValid) {
       setlastnamemgs("This field is required");
       setemailmgs("This field is required");
       // setpasswordmgs("This field is required");
-    }else if(lastNameValid){
+    } else if (lastNameValid) {
       setfirstnamemgs("This field is required");
       setemailmgs("This field is required");
       // setpasswordmgs("This field is required");
     }
-
   }
 
   function changepassword1() {
-    navigate("/change-password")
-
+    navigate("/change-password");
   }
   function profile1() {
-    navigate("/profile")
-
+    navigate("/profile");
   }
   function logout() {
-    navigate("/")
-
+    navigate("/");
   }
   function gotodashbord() {
-    navigate("/dashbord")
-
+    navigate("/dashbord");
   }
   return (
     <div>
@@ -194,8 +190,8 @@ function Profile() {
               id="firstname"
               placeholder="Enter First Name"
               value={firstname}
-              onChange={(e)=>{
-                setFirstname(e.target.value)
+              onChange={(e) => {
+                setFirstname(e.target.value);
                 handelfirstname();
               }}
             />
@@ -207,10 +203,9 @@ function Profile() {
               id="lastname"
               placeholder="Enter Last Name"
               value={lastname}
-              onChange={(e)=>{
-                setLastname(e.target.value)
+              onChange={(e) => {
+                setLastname(e.target.value);
                 handellastname();
-
               }}
             />
             <p id="lastnamemgs">{lastnamemgs}</p>
@@ -221,8 +216,8 @@ function Profile() {
               id="email"
               placeholder="Enter Email"
               value={email}
-              onChange={(e)=>{
-                setEmail(e.target.value)
+              onChange={(e) => {
+                setEmail(e.target.value);
                 handelemail();
               }}
             />

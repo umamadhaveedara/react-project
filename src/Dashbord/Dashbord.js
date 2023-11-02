@@ -8,6 +8,7 @@ import {
   deleteUserMain,
   PutUserMain,
   PostUserMain,
+  token
 } from "../Axiosinterceptor";
 
 const notify = () => toast(" 🦄 Sucessfully User Added");
@@ -49,6 +50,8 @@ function Dashbord() {
       })
       .catch((error) => [console.log("Get request error", error)]);
   }, [users.length]);
+
+  console.log(users)
 
   const [showPopup, setShowPopup] = useState(false);
   const [editMode, setEditMode] = useState(false);

@@ -4,10 +4,16 @@ const config = axios.create({
   baseURL: "http://localhost:3500/api/v1/app/Dashboard", // our API base URL
 });
 
+
+const token = JSON.parse(localStorage.getItem('storeTokenInLocal'));
+
+console.log(token)
+
 // Request interceptor for accept the application
 config.interceptors.request.use(
   (request) => {
     request.headers["Accept"] = "application/json";
+    request.headers["Authorization"] = `Bearer ${token}`;
     return request;
   },
   (error) => {

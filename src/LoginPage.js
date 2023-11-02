@@ -84,6 +84,42 @@ export default function App() {
     datacheck();
     if (validmaildata && validpassdata && matchFound) {
       localStorage.setItem("data", JSON.stringify(validUserDataPassing));
+
+      let sendingdata = {email:validUserDataPassing.email,
+        password:validUserDataPassing.password
+      }
+
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(sendingdata),
+      };
+
+
+      console.log(JSON.stringify(sendingdata))
+
+      const fetchUrlLogin = "http://localhost:3500/api/v1/app/login"
+      fetch(fetchUrlLogin, requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data.token)
+          localStorage.setItem("storeTokenInLocal", JSON.stringify(data.token));
+          console.log("here")
+        })
+        .catch((error) => {
+          console.error("POST request error:", error);
+        });
+
+
+
       navigate("/dashbord")
     } else if (validmaildata && validpassdata && !matchFound) {
       {
