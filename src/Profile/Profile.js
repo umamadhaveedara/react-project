@@ -8,17 +8,16 @@ function Profile() {
 
   const notify = () => toast(" 🦄 Sucessfully Updated");
 
-  const validUserPassedData = JSON.parse(localStorage.getItem("data"));
-  const token = JSON.parse(localStorage.getItem("storeTokenInLocal"));
+  const validUserPassedData = JSON.parse(localStorage.getItem("myData"));
 
   var firstNameValid = "";
   var lastNameValid = "";
   var emailValid = "";
   // var passwordValid = ""
 
-  const [firstname, setFirstname] = useState(validUserPassedData.firstName);
-  const [lastname, setLastname] = useState(validUserPassedData.lastName);
-  const [email, setEmail] = useState(validUserPassedData.email);
+  const [firstname, setFirstname] = useState(validUserPassedData.data.firstName);
+  const [lastname, setLastname] = useState(validUserPassedData.data.lastName);
+  const [email, setEmail] = useState(validUserPassedData.data.email);
   // const [password, setPassword] = useState("");
 
   const [firstnamemgs, setfirstnamemgs] = useState("");
@@ -78,8 +77,8 @@ function Profile() {
   // }
 
   let fetchUrl = `http://localhost:3500/api/v1/app/user/${validUserPassedData._id}`;
-  const id = validUserPassedData._id;
-  const password = validUserPassedData.password;
+  const id = validUserPassedData.data._id;
+  const password = validUserPassedData.data.password;
   const postData = {
     _id: id,
     firstName: firstname,
@@ -99,7 +98,7 @@ function Profile() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${validUserPassedData.token}`
         },
         body: JSON.stringify(postData),
       };
@@ -116,7 +115,7 @@ function Profile() {
             notify();
             navigate("/profile");
             localStorage.setItem("data", JSON.stringify(postData));
-            console.log(validUserPassedData.email);
+            console.log(validUserPassedData.data.email);
           }
           console.log(data);
         })
@@ -164,7 +163,7 @@ function Profile() {
           <div className="dropdown">
             <button className="dropbtn">
               <i className="fa-solid fa-user"></i>
-              <p>{`${validUserPassedData.firstName} ${validUserPassedData.lastName}`}</p>
+              <p>{`${validUserPassedData.data.firstName} ${validUserPassedData.data.lastName}`}</p>
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">

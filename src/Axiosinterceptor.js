@@ -5,15 +5,15 @@ const config = axios.create({
 });
 
 
-const token = JSON.parse(localStorage.getItem('storeTokenInLocal'));
+const token = JSON.parse(localStorage.getItem('myData'));
 
-console.log(token)
+
 
 // Request interceptor for accept the application
 config.interceptors.request.use(
   (request) => {
     request.headers["Accept"] = "application/json";
-    request.headers["Authorization"] = `Bearer ${token}`;
+    request.headers["Authorization"] = `Bearer ${token.token}`;
     return request;
   },
   (error) => {
@@ -22,6 +22,9 @@ config.interceptors.request.use(
 );
 
 // API endpoints
+
+
+
 export const getUser = () => {
   return config.get();
 };

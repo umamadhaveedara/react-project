@@ -42,7 +42,9 @@ function Dashbord() {
     image: "",
   });
 
-
+  const token = JSON.parse(localStorage.getItem("myData"));
+  console.log(token.token, "token");
+  
   useEffect(() => {
     getUser()
       .then((response) => {
@@ -57,7 +59,7 @@ function Dashbord() {
   const [editMode, setEditMode] = useState(false);
   const [selectedUserIndex, setSelectedUserIndex] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const validUserPassedData = JSON.parse(localStorage.getItem("data"));
+  const validUserPassedData = JSON.parse(localStorage.getItem("myData"));
   const [_id, setId] = useState("");
 
   var firstNameValid = "";
@@ -387,7 +389,7 @@ function Dashbord() {
           <div className="dropdown">
             <button className="dropbtn">
               <i className="fa-solid fa-user"></i>
-              <p>{`${validUserPassedData.firstName} ${validUserPassedData.lastName}`}</p>
+              <p>{`${validUserPassedData.data.firstName} ${validUserPassedData.data.lastName}`}</p>
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">

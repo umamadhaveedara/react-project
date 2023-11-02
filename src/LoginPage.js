@@ -14,32 +14,33 @@ export default function App() {
   };
 
   const navigate = useNavigate();
-  const [mainData, setMainData] = useState([]);
+  // const [mainData, setMainData] = useState([]);
 
-  useEffect(() => {
-    fetch(fetchUrl, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setMainData(data);
-      })
-      .catch((error) => {
-        console.error("GET request error:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(fetchUrl, requestOptions)
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setMainData(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("GET request error:", error);
+  //     });
+  // }, []);
 
   const [mail, setMail] = useState("");
   const [pass, setPass] = useState("");
   let [emailerror, setemailerror] = useState("");
   let [passerror, setpasserror] = useState("");
+
   var validmaildata;
   var validpassdata;
-  var matchFound;
-  var validUserDataPassing;
+  // var matchFound;
+  // var validUserDataPassing;
 
   const checkmail = () => {
     if (mail.trim() === "") {
@@ -65,30 +66,27 @@ export default function App() {
       validpassdata = true;
     }
   };
- 
 
-  function datacheck() {
-    // console.log(mainData);
-    mainData.some((eachuser) => {
-      if (eachuser.email === mail && eachuser.password === pass) {
-        matchFound = true;
-        validUserDataPassing = eachuser;
-      }
-    });
-  }
+  // function datacheck() {
+  //   // console.log(mainData);
+  //   mainData.some((eachuser) => {
+  //     if (eachuser.email === mail && eachuser.password === pass) {
+  //       matchFound = true;
+  //       validUserDataPassing = eachuser;
+  //     }
+  //   });
+  // }
 
   function Validation(event) {
     event.preventDefault();
     checkmail();
     checkpass();
-    datacheck();
-    if (validmaildata && validpassdata && matchFound) {
-      localStorage.setItem("data", JSON.stringify(validUserDataPassing));
+    // datacheck();
 
-      let sendingdata = {email:validUserDataPassing.email,
-        password:validUserDataPassing.password
-      }
+    if (validmaildata && validpassdata) {
+      let sendingdata = { email: mail, password: pass };
 
+      const fetchUrlLogin = "http://localhost:3500/api/v1/app/login";
 
       const requestOptions = {
         method: "POST",
@@ -98,33 +96,45 @@ export default function App() {
         body: JSON.stringify(sendingdata),
       };
 
-
-      console.log(JSON.stringify(sendingdata))
-
-      const fetchUrlLogin = "http://localhost:3500/api/v1/app/login"
       fetch(fetchUrlLogin, requestOptions)
         .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
+          if (response) {
+            return response.json();
           }
-          return response.json();
         })
-        .then((data) => {
-          console.log(data.token)
-          localStorage.setItem("storeTokenInLocal", JSON.stringify(data.token));
-          console.log("here")
+        .then( (data) => {
+          // Handle the successful response data here
+          if (data && data.message) {
+            toast.error(data.message);
+          } else {
+            // You can store the data in local storage if needed
+            console.log(JSON.stringify(data),"userdata")
+            if (JSON.stringify(data)) {
+              localStorage.setItem("myData", JSON.stringify(data));
+            }
+            navigate("/dashbord");
+            console.log("eeeeee");
+          }
         })
         .catch((error) => {
-          console.error("POST request error:", error);
+          // Handle errors here
+          // Display the error using react-toastify
         });
 
-
-
-      navigate("/dashbord")
-    } else if (validmaildata && validpassdata && !matchFound) {
-      {
-        notify();
-      }
+      // .then((response) => {
+      //   if (!response.ok) {
+      //     throw new Error("Network response was not ok");
+      //   }
+      //   return response.json();
+      // })
+      // .then((data) => {
+      //   console.log(data.token)
+      //   localStorage.setItem("storeTokenInLocal", JSON.stringify(data.token));
+      //   console.log("here")
+      // })
+      // .catch((error) => {
+      //   console.error(error);
+      // });
     } else if (validmaildata) {
       event.preventDefault();
       setpasserror("Field is required");
@@ -137,6 +147,7 @@ export default function App() {
       setemailerror("Field is required");
     }
   }
+
   return (
     <div className="center">
       <div className="container-login">
@@ -175,7 +186,7 @@ export default function App() {
                 <h3 className="keepmedata">Keep me logged in</h3>
               </div>
               <div className="forgot">
-              <Link to="/forgot">Forgot Password</Link>
+                <Link to="/forgot">Forgot Password</Link>
               </div>
             </div>
             <button id="submit-btn" type="submit">
