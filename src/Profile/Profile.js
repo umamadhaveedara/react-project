@@ -8,8 +8,9 @@ function Profile() {
 
   const notify = () => toast(" 🦄 Sucessfully Updated");
 
-  const validUserPassedData = JSON.parse(localStorage.getItem("myData"));
-
+  const validUserPassedData = localStorage.getItem("userdata.data");
+ 
+    
   var firstNameValid = "";
   var lastNameValid = "";
   var emailValid = "";

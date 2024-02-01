@@ -5,15 +5,22 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import {
+  passingLoginData
+} from "./Axiosinterceptor";
 
 export default function App() {
-  const fetchUrl = "http://localhost:3500/api/v1/app/user";
-  const notify = () => toast("Email or password worng");
-  const requestOptions = {
-    method: "GET",
-  };
+
+  
+  // const fetchUrl = "http://localhost:3500/api/v1/app/user";
+  // const notify = () => toast("Email or password worng");
+  // const requestOptions = {
+  //   method: "GET",
+  // };
 
   const navigate = useNavigate();
+
+
   // const [mainData, setMainData] = useState([]);
 
   // useEffect(() => {
@@ -39,6 +46,8 @@ export default function App() {
 
   var validmaildata;
   var validpassdata;
+
+
   // var matchFound;
   // var validUserDataPassing;
 
@@ -68,7 +77,6 @@ export default function App() {
   };
 
   // function datacheck() {
-  //   // console.log(mainData);
   //   mainData.some((eachuser) => {
   //     if (eachuser.email === mail && eachuser.password === pass) {
   //       matchFound = true;
@@ -77,49 +85,46 @@ export default function App() {
   //   });
   // }
 
-  function Validation(event) {
+  async function Validation(event) {
     event.preventDefault();
     checkmail();
     checkpass();
+
+
     // datacheck();
 
     if (validmaildata && validpassdata) {
       let sendingdata = { email: mail, password: pass };
 
-      const fetchUrlLogin = "http://localhost:3500/api/v1/app/login";
+      // const fetchUrlLogin = "http://localhost:3500/api/v1/app/login";
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(sendingdata),
-      };
+      // const requestOptions = {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(sendingdata),
+      // };
+       
+       await passingLoginData(sendingdata).then((data)=>{
+        if (data && data.message) {
+          toast.error(data.message);
+        } else {
+          // You can store the data in local storage if needed
+          localStorage.setItem("token", data.data.token);
+          navigate("/dashbord");
+        }
+       })
 
-      fetch(fetchUrlLogin, requestOptions)
-        .then((response) => {
-          if (response) {
-            return response.json();
-          }
-        })
-        .then( (data) => {
-          // Handle the successful response data here
-          if (data && data.message) {
-            toast.error(data.message);
-          } else {
-            // You can store the data in local storage if needed
-            console.log(JSON.stringify(data),"userdata")
-            if (JSON.stringify(data)) {
-              localStorage.setItem("myData", JSON.stringify(data));
-            }
-            navigate("/dashbord");
-            console.log("eeeeee");
-          }
-        })
-        .catch((error) => {
-          // Handle errors here
-          // Display the error using react-toastify
-        });
+      
+
+      // let comingData = await passingLoginData(sendingdata1)
+
+
+
+
+
+
 
       // .then((response) => {
       //   if (!response.ok) {

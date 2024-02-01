@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const config = axios.create({
-  baseURL: "http://localhost:3500/api/v1/app/Dashboard", // our API base URL
+  baseURL: "http://localhost:3500/api/v1/app", // our API base URL
 });
 
 
-const token = JSON.parse(localStorage.getItem('myData'));
+
 
 
 
@@ -13,7 +13,10 @@ const token = JSON.parse(localStorage.getItem('myData'));
 config.interceptors.request.use(
   (request) => {
     request.headers["Accept"] = "application/json";
-    request.headers["Authorization"] = `Bearer ${token.token}`;
+    const token = localStorage.getItem('token');
+    if(token){
+      request.headers.Authorization = `Bearer ${token}`;
+    }
     return request;
   },
   (error) => {
@@ -26,16 +29,19 @@ config.interceptors.request.use(
 
 
 export const getUser = () => {
-  return config.get();
+  return config.get('/Dashboard');
 };
 export const PostUserMain = (data) => {
-  return config.post('',data);
+  return config.post('/Dashboard',data);
+};
+export const passingLoginData = (data) => {
+  return config.post('/login',data);
 };
 export const deleteUserMain = (id) => {
-  return config.delete(`/${id}`);
+  return config.delete(`/Dashboard/${id}`);
 };
 export const PutUserMain = (id, data) => {
-  return config.put(`/${id}`,data);
+  return config.put(`/Dashboard/${id}`,data);
 };
 
 export default config

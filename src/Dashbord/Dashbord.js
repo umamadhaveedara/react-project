@@ -42,16 +42,17 @@ function Dashbord() {
     image: "",
   });
 
-  const token = JSON.parse(localStorage.getItem("myData"));
-  console.log(token.token, "token");
-  
+const fetchdata=async()=>{
+   const response = await getUser().then((resp)=>{
+    if(resp){
+      setUsers(resp.data);
+    }
+   })
+}
+
   useEffect(() => {
-    getUser()
-      .then((response) => {
-        setUsers(response.data);
-      })
-      .catch((error) => [console.log("Get request error", error)]);
-  }, [users.length]);
+     fetchdata()
+  }, []);
 
   console.log(users)
 
@@ -286,6 +287,8 @@ function Dashbord() {
           user.phoneNumber.toString().toLowerCase().includes(searchQuery)
       )
     : users;
+
+    
   const renderUserRows = () => {
     if (searchQuery && filteredUsers.length === 0) {
       return <p>No users found</p>;
@@ -389,7 +392,7 @@ function Dashbord() {
           <div className="dropdown">
             <button className="dropbtn">
               <i className="fa-solid fa-user"></i>
-              <p>{`${validUserPassedData.data.firstName} ${validUserPassedData.data.lastName}`}</p>
+              {/* <p>{`${validUserPassedData.data.firstName} ${validUserPassedData.data.lastName}`}</p> */}
               <i className="fa fa-caret-down"></i>
             </button>
             <div className="dropdown-content">
